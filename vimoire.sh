@@ -1,10 +1,11 @@
 #! /bin/bash
 
 # Vimoir
-# An attempt at a vim and tmux based IDE in convenient bash scripts
+# A bash wrapper for vim to save and restore sessions of coding projects
 
 #----------------------------------------------------------------------------------------
 # User defined variables
+# Delete ~/.config/vimoire for any settings to take effect
 
 # Quick save keybinding
 
@@ -13,43 +14,50 @@ QSKEY="<F11>"
 #----------------------------------------------------------------------------------------
 # Subroutines
 
-# Create vim variables file
-s_vars(){
-	echo "let vimoirepath = '$PPATH/.vimoire/quicksave.vim'" > $PPATH/.vimoire/vars.vim
-	echo "map $QSKEY :execute \"mksession! \" . vimoirepath<cr>" >> $PPATH/.vimoire/vars.vim
-	echo "inoremap $QSKEY <esc>:execute \"mksession! \" . vimoirepath<cr>" >> $PPATH/.vimoire/vars.vim
-}
 
-# 1st passed parameter is the path
+#----------------------------------------------------------------------------------------
+# Path variables
+
 PPATH=$(realpath $1)
-#
+
 PNAME=$(basename $PPATH)
 
+#----------------------------------------------------------------------------------------
+# Global setup
 
-if [ -e $PPATH/.vimoire ]
+# Settings subdirectory
+if [ ! -e ~/.config/vimoire ]
 then
-	if [ -e $PPATH/.vimoire/vars.vim ]
-	then 
-		if [ -e $PPATH/.vimoire/quicksave.vim ]
-		then
-			vim -S $PPATH/.vimoire/quicksave.vim -S $PPATH/.vimoire/vars.vim $PPATH
-		else
-			vim -S $PPATH/.vimoire/vars.vim $PPATH
-		fi
-	else
-		if [ -e $PPATH/.vimoire/quicksave.vim ]
-		then
-			s_vars
-			vim -S $PPATH/.vimoire/quicksave.vim -S $PPATH/.vimoire/vars.vim $PPATH
-		else
-			s_vars
-			vim -S $PPATH/.vimoire/vars.vim $PPATH
-		fi
-	fi
-
-else
-	echo 'not found'
-	mkdir $PPATH/.vimoire
-	s_vars
-	vim -S $PPATH/.vimoire/vars.vim $PPATH
+	mkdir ~/.config/vimoire
 fi
+
+# Supplemental settings file... really just a quicksave keybind
+if [ ! -e ~/.config/vimoire/settings.vim ]
+then
+	echo "map $QSKEY :execute \"mksession! \" . vimoirepath<cr>" > ~/.config/vimoire/settings.vim
+	echo "inoremap $QSKEY <esc>:execute \"mksession! \" . vimoirepath<cr>" >> ~/.config/vimoire/settings.vim
+fi
+
+
+#----------------------------------------------------------------------------------------
+# Session settup
+
+# Session settings subdirectory
+if [ ! -e $PPATH/.vimoire ]
+then
+	mkdir $PPATH/.vimoire
+fi
+
+# Session settings
+if [ ! -e $PPATH/.vimoire/vars.vim ]
+then
+	echo "let vimoirepath = '$PPATH/.vimoire/quicksave.vim'" > $PPATH/.vimoire/vars.vim
+fi
+
+if [ -e $PPATH/.vimoire/quicksave.vim ]
+then
+	vim -S $PPATH/.vimoire/quicksave.vim -S $PPATH/.vimoire/vars.vim -S ~/.config/vimoire/settings.vim
+else
+	vim -S $PPATH/.vimoire/vars.vim -S ~/.config/vimoire/settings.vim $PPATH
+fi
+
