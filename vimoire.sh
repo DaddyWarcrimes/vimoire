@@ -3,6 +3,20 @@
 # Vimoir
 # A bash wrapper for vim to save and restore sessions of coding projects
 
+# version 20230518
+
+
+#----------------------------------------------------------------------------------------
+# TODO
+#
+# Move symbolic link to --install arguement
+#
+# Create --delete argument to remove symbolic link and settings file
+#
+# Create --help argument (will also show if no parameters passed)
+#
+# Check if passed argument is a directory, and handle invalid arguments
+
 #----------------------------------------------------------------------------------------
 # User defined variables
 # Delete ~/.config/vimoire for any settings to take effect
@@ -13,6 +27,18 @@ QSKEY="<F11>"
 
 #----------------------------------------------------------------------------------------
 # Subroutines
+
+
+#----------------------------------------------------------------------------------------
+# Flags
+
+# This is just a stub
+# Should be a case block with --delete, --install, and --help
+if [ $1 == "--delete" ]
+then
+       echo "delete"
+       exit 0
+fi
 
 
 #----------------------------------------------------------------------------------------
@@ -34,8 +60,8 @@ fi
 # Supplemental settings file... really just a quicksave keybind
 if [ ! -e ~/.config/vimoire/settings.vim ]
 then
-	echo "map $QSKEY :execute \"mksession! \" . vimoirepath<cr>" > ~/.config/vimoire/settings.vim
-	echo "inoremap $QSKEY <esc>:execute \"mksession! \" . vimoirepath<cr>" >> ~/.config/vimoire/settings.vim
+	echo "map $QSKEY :execute \"mksession! \" . vimoirepath <bar> echo \"Session Saved\"<cr>" > ~/.config/vimoire/settings.vim
+	echo "inoremap $QSKEY <esc>:execute \"mksession! \" . vimoirepath <bar> echo \"Session Saved\" <cr>a" >> ~/.config/vimoire/settings.vim
 fi
 
 # Symbolic link in ~/bin
