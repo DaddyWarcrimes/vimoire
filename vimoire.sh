@@ -38,6 +38,13 @@ then
 	echo "inoremap $QSKEY <esc>:execute \"mksession! \" . vimoirepath<cr>" >> ~/.config/vimoire/settings.vim
 fi
 
+# Symbolic link in ~/bin
+
+if [ ! -e ~/bin/vimoire ]
+then
+	SCRIPT="$(realpath $0)"
+	ln -s $SCRIPT ~/bin/vimoire
+fi
 
 #----------------------------------------------------------------------------------------
 # Session settup
@@ -45,6 +52,7 @@ fi
 # Session settings subdirectory
 if [ ! -e $PPATH/.vimoire ]
 then
+	echo "Creating session folder"
 	mkdir $PPATH/.vimoire
 fi
 
