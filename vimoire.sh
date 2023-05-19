@@ -3,23 +3,16 @@
 # Vimoir
 # A bash wrapper for vim to save and restore sessions of coding projects
 
-VER=20230518
+VER=1
 
 
 #----------------------------------------------------------------------------------------
 # TODO
 #
-# Move symbolic link to --install arguement
-#
-# Create --delete argument to remove symbolic link and settings file
-#
-# Create --help argument (will also show if no parameters passed)
-#
-# Check if passed argument is a directory, and handle invalid arguments
+# Remove quicksave keybind from quicksave.vim. Maybe search the file and delete the line on load, or perhaps find a way for ~/.config/vimoire/settings.vim to take priority
 
 #----------------------------------------------------------------------------------------
 # User defined variables
-# Delete ~/.config/vimoire for any settings to take effect
 
 # Quick save keybinding
 
@@ -31,7 +24,7 @@ QSKEY="<F11>"
 # Create symbolic link in ~/bin to this script
 s_link(){
 	SCRIPT="$(realpath $0)"
-	if [ -f ~/bin/vimoire ]; then #TODO make this smarter
+	if [ -f ~/bin/vimoire ]; then
 		TARGET=$(readlink ~/bin/vimoire)
 
 		if [ $TARGET == $SCRIPT ]; then
@@ -67,11 +60,13 @@ s_link(){
 	fi
 }
 
+# Delete ~/.config/vimoire for any settings to take effect
 s_delete(){
 	rm ~/bin/vimoire
 	rm -r ~/.config/vimoire
 }
 
+# Prints out instructions and options
 s_help(){
 	echo " "
 	echo "vimoire, version $VER"
@@ -90,8 +85,7 @@ s_help(){
 }
 
 #----------------------------------------------------------------------------------------
-# Flags
-
+# Flag handling
 
 if [ ! -e $1 ]; then
 	case $1 in
@@ -114,7 +108,7 @@ if [ ! -e $1 ]; then
 fi
 
 #----------------------------------------------------------------------------------------
-# Path variables
+# Path variable
 
 PPATH=$(realpath $1)
 
