@@ -3,7 +3,7 @@
 # Vimoir
 # A bash wrapper for vim to save and restore sessions of coding projects
 
-VER=1
+VER=1.0.1
 
 
 #----------------------------------------------------------------------------------------
@@ -79,15 +79,16 @@ s_help(){
 	echo "You can change this keybinding by editing ~/.config/vimoire/settings.vim or $(realpath $0)"
 	echo " "
 	echo "Options:"
-	echo "--help 	Displays this information"
-	echo "--install	Adds a symbolic link at ~/bin/vimoire"
-	echo "--delete 	Removes ~/bin/vimoire symbolic link and ~/.config/vimoire/ subdirectory"
+	echo "--help        Displays this information"
+	echo "--install     Adds a symbolic link at ~/bin/vimoire"
+	echo "--delete      Removes ~/bin/vimoire symbolic link and ~/.config/vimoire/ subdirectory"
 }
 
 #----------------------------------------------------------------------------------------
 # Flag handling
 
-if [ ! -e $1 ]; then
+if [ -z $1 ] || [ ! -e $1 ]; then
+
 	case $1 in
 		"--help")
 			s_help
